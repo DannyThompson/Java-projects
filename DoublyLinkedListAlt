@@ -1,0 +1,141 @@
+package linkedlist;
+
+/**
+ *
+ * @author Danny
+ */
+import java.util.Scanner;
+public class LinkedList {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        //Takiing initial input in main
+        System.out.println("This program adds two numbers of any size");
+        System.out.println("Enter the first number: ");
+        String l1 = scan.next();
+        System.out.println("Enter the second number: ");
+        String l2 = scan.next();
+        ////
+        doublylinkedlist list1 = sToList(l1);
+        doublylinkedlist list2 = sToList(l2);
+        sumlist(list1, list2);
+        
+    } 
+    
+    ///creating a node///
+    public static class node{
+        public static int element;
+        node prev;
+        node next;
+        
+         public node(int e){
+        element = e;
+        }
+    }
+    
+    ///Creating the doublylinkedlist class///
+    public static class doublylinkedlist{
+    
+        public static node start;
+        public static node end;
+        public static  int size;
+        
+        //Constuctor
+        public doublylinkedlist(){
+            start = null;
+            end = null;
+            size = 0;
+        }
+        public void deleteEnd(){
+            end = end.prev;
+            size--;
+        }
+        //Boolean to check if empty. If start returns null, list is still empty.
+        public static boolean Empty(){
+            return start == null;
+        }
+        //Checking the size of the list
+        public static int getSize(){
+            return size;
+        }
+    
+        //Inserting numbers from end of list
+        public static void insertnum(int num){
+            node newnum = new node(num);
+             if(Empty()){
+                start = newnum;
+            }
+            else{
+                end.next = newnum;
+                newnum.prev = end;
+            }
+            end = newnum;
+            size++;
+        }
+        //print method
+        public static void printl(){
+            node current = end;
+            while (current != null){
+		System.out.println(current.element);
+		current = current.next;
+            }
+        }
+    }
+    
+    //Method to index through the string and convert each index to it's int val.
+    public static doublylinkedlist sToList(String s){
+        doublylinkedlist ilist = new doublylinkedlist();
+        for (int i = s.length()-1; i >=0; i--){
+           int variable = s.charAt(i)-48;
+           ilist.insertnum(variable);
+        }   
+       return ilist;
+    }
+    
+    public static doublylinkedlist sumlist(doublylinkedlist list1, doublylinkedlist list2){
+        doublylinkedlist answer = new doublylinkedlist();
+        
+        int carry = 0;
+        int sum = 0;
+        
+        //Loops until both lists are null, and there is nothing left to carry
+        //At the end, it inserts the sum into the 'answer' list
+        //This is repeated until both lists are finished
+        while (list1.start !=null && list2.start !=null){
+            if (list1.start !=null && list2.start != null){
+                sum = carry + list1.end.element + list2.end.element;
+                list1.end= list1.end.prev;
+                list1.size =  (list1.size--);
+                list2.end= list2.end.prev;
+                list2.size =  (list2.size--);
+            }
+            else if (list1.start != null && list2.start == null){
+                sum = carry + list1.end.element;
+                list1.end= list1.end.prev;
+                list1.size =  (list1.size--);
+            }
+            else if (list1.start == null && list2.start != null){
+                sum = carry + list2.end.element;
+                list2.end= list2.end.prev;
+                list2.size =  (list2.size--);
+            }
+            else{
+                sum = carry;
+            }
+            //Method for if the sum is >=10 and a carry is needed.
+            if (sum >=10){
+                carry = sum / 10;
+                sum%= 10;
+            }
+            else{
+                carry = 0;
+            }
+        }
+        answer.printl();
+        return list1; 
+    }
+   
+}

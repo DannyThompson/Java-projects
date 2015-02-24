@@ -12,11 +12,22 @@ public class LinkedList {
      */
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
+        //Takiing initial input in main
+        System.out.println("This program adds two numbers of any size");
+        System.out.println("Enter the first number: ");
+        String l1 = scan.next();
+        System.out.println("Enter the second number: ");
+        String l2 = scan.next();
+        ////
+        doublylinkedlist list1 = sToList(l1);
+        doublylinkedlist list2 = sToList(l2);
+        sumlist(list1, list2);
+        
     } 
     
     ///creating a node///
     public static class node{
-        public int element;
+        public static int element;
         node prev;
         node next;
         
@@ -50,7 +61,7 @@ public class LinkedList {
         public static int getSize(){
             return size;
         }
-       
+    
         //Inserting numbers from end of list
         public static void insertnum(int num){
             node newnum = new node(num);
@@ -65,8 +76,8 @@ public class LinkedList {
             size++;
         }
         //print method
-        public void print(){
-            node current = start;
+        public static void printl(){
+            node current = end;
             while (current != null){
 		System.out.println(current.element);
 		current = current.next;
@@ -74,28 +85,55 @@ public class LinkedList {
         }
     }
     
-    //Method to take input, index through, and convert each index to a number.
-    //Each number is then stored in a node, and returned.
-    public static doublylinkedlist index(){
-        Scanner input = new Scanner(System.in);
-        System.out.println("Enter a number: ");
-        String istring = input.next();
-        doublylinkedlist list1 = new doublylinkedlist();
-        for (int i = 0, x = istring.length(); i < x; i++){
-           int variable = istring.charAt(i) - 48 ;
-            list1.insertnum(variable);
-            System.out.println(variable);
+    //Method to index through the string and convert each index to it's int val.
+    public static doublylinkedlist sToList(String s){
+        doublylinkedlist ilist = new doublylinkedlist();
+        for (int i = 0, x = s.length(); i < x; i++){
+           int variable = s.charAt(i)-48;
+           ilist.insertnum(variable);
         }   
-        System.out.println("Enter another number: ");
-        String ostring = input.next();
-        doublylinkedlist list2 = new doublylinkedlist();
-        for (int i = 0, x = ostring.length(); i < x; i++){
-           int variable = ostring.charAt(i) - 48 ;
-            list2.insertnum(variable);
-            System.out.println(variable);          
-        }
-        System.out.println(list1.getSize());
-        return list1;
+       return ilist;
     }
+    
+    public static doublylinkedlist sumlist(doublylinkedlist list1, doublylinkedlist list2){
+        doublylinkedlist answer = new doublylinkedlist();
+        
+        int carry = 0;
+        int sum = 0;
+        
+        //Loops until both lists are null, and there is nothing left to carry
+        //At the end, it inserts the sum into the 'answer' list
+        //This is repeated until both lists are finished
+        while (list1.end !=null || list2.end !=null || carry != 0){
+            if (list1.start !=null && list2.end != null){
+                sum = carry + list1.end.element + list2.end.element;
+                list1.deleteEnd();
+                list2.deleteEnd();
+            }
+            else if (list1.end != null && list2.end ==null){
+                sum = carry + list1.end.element;
+                list1.deleteEnd();
+            }
+            else if (list1.end == null && list2.end != null){
+                sum = carry + list2.end.element;
+                list2.deleteEnd();
+            }
+            else{
+                sum = carry;
+            }
+            //Method for if the sum is >=10 and a carry is needed.
+            if (sum >=10){
+                carry = sum / 10;
+                sum%= 10;
+            }
+            else{
+                carry = 0;
+            }
+            answer.insertnum(sum);
+        }
+        answer.printl();
+        return list1; 
+    }
+   
 }
 

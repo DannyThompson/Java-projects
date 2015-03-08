@@ -8,15 +8,35 @@ public class Assignment4 {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) 
-    {
+    public static void main(String[] args) {
         //**Simply testing out input, not necessarily how it will take input in the end**//
-       
-        Deque deque = new Deque();
-        deque.enqueueStart(22, 33);
-        System.out.println(deque.peekFront().amount);
-        System.out.println(deque.peekBack().cost);  
-    }
+        Deque stocks = new Deque();
+        Scanner scan = new Scanner(System.in);
+        String stocktrades = "";
+        System.out.println("Enter the amount of stocks, their cost, and B for"
+                + "buy, or S for sell. "
+                + "Ex: 99 25 B");
+        stocktrades = scan.nextLine();
+        
+        //delimiter that will eliminate spaces in the string
+        String delim = "[ ]+";
+        //the string is parsed into seperate "tokens"
+        String[] tokens = stocktrades.split(delim);
+        int amount = Integer.parseInt(tokens[0]);
+        int cost = Integer.parseInt(tokens[1]);
+        if (tokens[2].charAt(0) == 'B'){
+        stocks.enqueueStart(amount, cost);
+        }
+        else
+        {
+            if (tokens[2].charAt(0)=='S')
+            {
+              
+                
+            }
+        }  
+    } 
+        
     //*Node Class. Has two elements: Amount and cost*//
      public static class Node
      {
@@ -29,7 +49,8 @@ public class Assignment4 {
             this.amount = amount;
             this.cost = cost;
         }
-     }
+    }
+     
      //*Creating a Deque class*//
     public static class Deque
     {
@@ -71,7 +92,7 @@ public class Assignment4 {
             {
                 return end;
             }
-        }
+        } 
     //*adding ints to the first node. Shares bought/Cost, respectively*//
         public void enqueueStart(int amount, int cost)
         {
@@ -124,7 +145,6 @@ public class Assignment4 {
          }
          size --;
         }
-        
         //*removing last node*//
         public void dequeueLast()
         {
@@ -142,6 +162,50 @@ public class Assignment4 {
              end = end.prev;
              end.next = null;
             }
-        }         
+        }  
+        public int stockTotal(){
+            int total = 0;
+            Node current = start;
+            while(current!= null){
+                total += current.amount;
+                current = current.next;
+            }
+            return total;
+        }
     }
+    //Sell Method. Sells X amount of stocks for X cost.
+    public static Deque sellStocks(int sellAmount, int sellCost, Deque stocks){
+        //Determines the total amount of money made or lost from that days
+        // sold stocks.
+        int saleTotal = sellAmount * sellCost;
+        
+        //Initial amount stocks were bought for
+        int Iamount = 0;
+        
+        //Capital gain is total money gained or lost. The difference between
+        //saleTotal - Iamount
+        int capitalGain = 0;
+        
+        //Determines if a sale was made
+        boolean sale = true;
+        
+        //Sets a limit that only the amount of shares sold are calculated
+        int limit = sellAmount;
+        
+        //If stocks are attempted to be sold, but none are owned
+        if (stocks.isEmpty()){
+            System.out.println("No stocks left to share");
+            limit = 0;
+            sale = false;
+        }
+        if (stocks.stockTotal() < sellAmount){
+            System.out.println("You don't own enough stocks!");
+            System.out.println("You have" stocks.stockTotal()"'");
+            
+        }
+        
+        
+    }
+    
+    
 }

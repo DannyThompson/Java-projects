@@ -13,28 +13,32 @@ public class Assignment4 {
         Deque stocks = new Deque();
         Scanner scan = new Scanner(System.in);
         String stocktrades = "";
-        System.out.println("Enter the amount of stocks, their cost, and B for"
+        
+        System.out.println("Enter the amount of stocks, their cost, and B for "
                 + "buy, or S for sell. "
                 + "Ex: 99 25 B");
-        stocktrades = scan.nextLine();
+        System.out.println("Enter 'quit' to quit");
         
-        //delimiter that will eliminate spaces in the string
-        String delim = "[ ]+";
+        while (stocktrades!= "quit"){
+            System.out.println(">> ");
+            stocktrades = scan.nextLine();
+         //delimiter that will eliminate spaces in the string
+            String delim = "[ ]+";
         //the string is parsed into seperate "tokens"
-        String[] tokens = stocktrades.split(delim);
-        int amount = Integer.parseInt(tokens[0]);
-        int cost = Integer.parseInt(tokens[1]);
-        if (tokens[2].charAt(0) == 'B'){
-        stocks.enqueueStart(amount, cost);
-        }
-        else
-        {
-            if (tokens[2].charAt(0)=='S')
-            {
-              
-                
+            String[] tokens = stocktrades.split(delim);
+             int amount = Integer.parseInt(tokens[0]);
+            int cost = Integer.parseInt(tokens[1]);
+            if (tokens[2].charAt(0) == 'B'){
+            stocks.enqueueStart(amount, cost);
             }
-        }  
+            else
+            {
+               if (tokens[2].charAt(0)=='S')
+               {
+               stocks = sellStocks(amount, cost, stocks);
+               }
+            }  
+        }    
     } 
         
     //*Node Class. Has two elements: Amount and cost*//
@@ -198,14 +202,35 @@ public class Assignment4 {
             limit = 0;
             sale = false;
         }
-        if (stocks.stockTotal() < sellAmount){
-            System.out.println("You don't own enough stocks!");
-            System.out.println("You have" stocks.stockTotal()"'");
+        else if (stocks.stockTotal() < sellAmount){
+            System.out.println("You don't own enough stocks! Choose a smaller"
+                    + "amount.");
+        }
+        while (limit > 0){
+        if (stocks.start.amount-limit <=0){
+            Iamount += stocks.start.amount * stocks.start.cost;
+            stocks.start.amount -= limit;
+            limit = Math.abs(stocks.start.amount);
+            stocks.dequeueLast();
+        }
+        else{
+            Iamount += limit * stocks.start.cost;
+            stocks.start.amount -= limit;
+            limit = 0;
+        }
+        }
+        if (sale){
+            capitalGain = saleTotal - Iamount;
+            if (capitalGain > 0){
+                System.out.println("You made $" + capitalGain + "!");
+            }
+            else{
+                System.out.println("You lost $"+ Math.abs(capitalGain));
+            }
             
         }
-        
+        return stocks;
         
     }
-    
-    
+     
 }

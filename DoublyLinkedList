@@ -21,7 +21,7 @@ public class LinkedList {
         ////
         doublylinkedlist list1 = sToList(l1);
         doublylinkedlist list2 = sToList(l2);
-        sumlist(list1, list2);
+        System.out.println(sumlist(list1, list2));
         
     } 
     

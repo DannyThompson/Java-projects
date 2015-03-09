@@ -18,24 +18,29 @@ public class Assignment4 {
                 + "buy, or S for sell. "
                 + "Ex: 99 25 B");
         System.out.println("Enter 'quit' to quit");
-        
+
+        //While loop, taking the input.
+        //If quit 
         while (stocktrades!= "quit"){
             System.out.println(">> ");
             stocktrades = scan.nextLine();
+            if (stocktrades == "quit"){
+                System.exit(0);
+            }
          //delimiter that will eliminate spaces in the string
             String delim = "[ ]+";
         //the string is parsed into seperate "tokens"
             String[] tokens = stocktrades.split(delim);
-             int amount = Integer.parseInt(tokens[0]);
+            int amount = Integer.parseInt(tokens[0]);
             int cost = Integer.parseInt(tokens[1]);
             if (tokens[2].charAt(0) == 'B'){
-            stocks.enqueueStart(amount, cost);
+                stocks.enqueueStart(amount, cost);
             }
             else
             {
                if (tokens[2].charAt(0)=='S')
                {
-               stocks = sellStocks(amount, cost, stocks);
+                    stocks = sellStocks(amount, cost, stocks);
                }
             }  
         }    
@@ -198,20 +203,25 @@ public class Assignment4 {
         
         //If stocks are attempted to be sold, but none are owned
         if (stocks.isEmpty()){
-            System.out.println("No stocks left to share");
+            System.out.println("No stocks left to sell.");
             limit = 0;
             sale = false;
         }
         else if (stocks.stockTotal() < sellAmount){
-            System.out.println("You don't own enough stocks! Choose a smaller"
-                    + "amount.");
+            System.out.println("You don't own enough stocks! "
+                    + "you currently have " +
+                    stocks.stockTotal() + " left.");
+            System.out.println("Choose a number in this range.");
+            limit = 0;
+            sale = false;
+                    
         }
         while (limit > 0){
         if (stocks.start.amount-limit <=0){
             Iamount += stocks.start.amount * stocks.start.cost;
             stocks.start.amount -= limit;
             limit = Math.abs(stocks.start.amount);
-            stocks.dequeueLast();
+            stocks.dequeueFirst();
         }
         else{
             Iamount += limit * stocks.start.cost;

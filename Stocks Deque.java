@@ -17,35 +17,39 @@ public class Assignment4 {
         System.out.println("Enter the amount of stocks, their cost, and B for "
                 + "buy, or S for sell. "
                 + "Ex: 99 25 B");
-        System.out.println("Enter 'quit' to quit");
+        System.out.println("Enter 'Q' to quit");
 
         //While loop, taking the input.
-        //If quit 
-        while (stocktrades!= "quit"){
+        while (stocktrades!= "Q")
+        {
             System.out.println(">> ");
             stocktrades = scan.nextLine();
-            if (stocktrades == "quit"){
-                System.exit(0);
-            }
+          
          //delimiter that will eliminate spaces in the string
             String delim = "[ ]+";
+            
         //the string is parsed into seperate "tokens"
             String[] tokens = stocktrades.split(delim);
+            
+            //System exit. If Just 'Q' is entered, the program will end.
+            if (tokens[0].charAt(0) == 'Q')
+            {
+                System.exit(0);
+            }
+            
             int amount = Integer.parseInt(tokens[0]);
             int cost = Integer.parseInt(tokens[1]);
+            //If the third character is B, the values will simply be enqueued
             if (tokens[2].charAt(0) == 'B'){
                 stocks.enqueueStart(amount, cost);
             }
-            else
-            {
-               if (tokens[2].charAt(0)=='S')
-               {
+            //If S, the sellStocks method will take action,
+            //and input the resulting values.
+            if (tokens[2].charAt(0)=='S'){
                     stocks = sellStocks(amount, cost, stocks);
-               }
-            }  
-        }    
-    } 
-        
+            }    
+        } 
+    }     
     //*Node Class. Has two elements: Amount and cost*//
      public static class Node
      {
@@ -102,6 +106,7 @@ public class Assignment4 {
                 return end;
             }
         } 
+        
     //*adding ints to the first node. Shares bought/Cost, respectively*//
         public void enqueueStart(int amount, int cost)
         {
@@ -117,6 +122,7 @@ public class Assignment4 {
             }
             size ++;   
         }
+        
         //*adding to the last node*//
         public void enqueueEnd(int amount, int cost)
         {
@@ -134,6 +140,7 @@ public class Assignment4 {
             }
             size++;
         }
+        
         //*removing first node*//
         public void dequeueFirst()
         {
@@ -154,6 +161,7 @@ public class Assignment4 {
          }
          size --;
         }
+        
         //*removing last node*//
         public void dequeueLast()
         {
@@ -172,18 +180,22 @@ public class Assignment4 {
              end.next = null;
             }
         }  
-        public int stockTotal(){
+        public int stockTotal()
+        {
             int total = 0;
             Node current = start;
-            while(current!= null){
+            while(current!= null)
+            {
                 total += current.amount;
                 current = current.next;
             }
             return total;
         }
     }
+    
     //Sell Method. Sells X amount of stocks for X cost.
-    public static Deque sellStocks(int sellAmount, int sellCost, Deque stocks){
+    public static Deque sellStocks(int sellAmount, int sellCost, Deque stocks)
+    {
         //Determines the total amount of money made or lost from that days
         // sold stocks.
         int saleTotal = sellAmount * sellCost;
@@ -202,12 +214,14 @@ public class Assignment4 {
         int limit = sellAmount;
         
         //If stocks are attempted to be sold, but none are owned
-        if (stocks.isEmpty()){
+        if (stocks.isEmpty())
+        {
             System.out.println("No stocks left to sell.");
             limit = 0;
             sale = false;
         }
-        else if (stocks.stockTotal() < sellAmount){
+        else if (stocks.stockTotal() < sellAmount)
+        {
             System.out.println("You don't own enough stocks! "
                     + "you currently have " +
                     stocks.stockTotal() + " left.");
@@ -216,31 +230,35 @@ public class Assignment4 {
             sale = false;
                     
         }
-        while (limit > 0){
-        if (stocks.start.amount-limit <=0){
+        while (limit > 0)
+        {
+        if (stocks.start.amount-limit <=0)
+        {
             Iamount += stocks.start.amount * stocks.start.cost;
             stocks.start.amount -= limit;
             limit = Math.abs(stocks.start.amount);
             stocks.dequeueFirst();
         }
-        else{
+        else
+        {
             Iamount += limit * stocks.start.cost;
             stocks.start.amount -= limit;
             limit = 0;
         }
         }
-        if (sale){
+        if (sale)
+        {
             capitalGain = saleTotal - Iamount;
-            if (capitalGain > 0){
+            if (capitalGain > 0)
+            {
                 System.out.println("You made $" + capitalGain + "!");
             }
-            else{
+            else
+            {
                 System.out.println("You lost $"+ Math.abs(capitalGain));
             }
             
         }
-        return stocks;
-        
+        return stocks; 
     }
-     
 }

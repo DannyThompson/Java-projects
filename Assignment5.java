@@ -31,13 +31,15 @@ public class Assignment5 {
         public Node root;
         public void addNode(String token)
         {
+            Node newNode = new Node(token);
             root = new Node(token);
-            
             if (root == null)
             {
                 root = newNode;
             }
-            
+            else{
+                
+            }
     }
     public void inOrder(Node focusNode){
         if(focusNode != null)

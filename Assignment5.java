@@ -1,74 +1,213 @@
 package assignment5;
 
  //@author Danny
- 
+ import java.util.Scanner;
 public class Assignment5 {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-       
-    }
-    public static class Node{
-        char token;
-  
-        public static Node leftChild;
-        public static Node rightChild;
-        public static Node parent;
-        
-        Node(char token){
-        this.token = token; 
-        }
-        
-        public char getToken(){
-        return  token;
-        }
-    }
+    public static void main(String[]args) {
+		Scanner s = new Scanner(System.in);
+		String inputExpression = "";
+		while (!inputExpression.equals(" ")){
+			inputExpression = s.nextLine();
+			BinaryTree tree = binaryInfixTreeBuilder(inputExpression);
+			tree.inOrder(null);
+			System.out.println("DIFFERENTIATION OF " + tree.infixString + ":");
+			System.out.println(diff(tree));
+
+		}
+	}
+
+	// takes a infix expression string as input
+	// returns a binary tree that corresponds to original expression
+	public static BinaryTree binaryInfixTreeBuilder(String infixStr) {
+		
+		BinaryTree infixTree = new BinaryTree(' ', null, null);
+		for (int i = 0; i < infixStr.length(); i++){
+			char token = infixStr.charAt(i);
+			if (infixTree.focusNode == null)
+				infixTree.focusNode = infixTree.root;
+
+			if (token == '(')
+				infixTree.descendLeft();
+
+			else if (token == '+' || token == '-' || token == '*' || token == '/' || token == '^'){
+				if (!(infixTree.focusNode.data == ' ')){
+					infixTree.ascendParent();
+				}
+					infixTree.setFocus(token);
+					infixTree.descendRight();
+			}
+
+			else if (token >= '0' && token <= '9' || Character.isLetter(token)){
+				infixTree.setFocus(token);
+				infixTree.ascendParent();
+			}
+
+			else if (token == ')'){
+				infixTree.ascendParent();
+			}
+
+			else if (token == ' '){
+			}
+		}
+		return infixTree;
+	}
+
+	public static String diff(BinaryTree inputTree){
+
+		Node current = inputTree.root;
+
+		if (current.data == ' ')
+			current = current.childL;
+
+		// base cases, if root = constant or = 'x'
+		if (current.isLeaf() && Character.toLowerCase(current.data) != 'x')
+			return "0";
+
+		else if (current.isLeaf() && Character.toLowerCase(current.data) == 'x')
+			return "1";
+		
+		// if '+', creates two trees from each of the children
+		// these trees are each differentiated and added together
+		else if (current.data == '+'){
+			BinaryTree left = new BinaryTree(current.childL.data, current.childL.childL, current.childL.childR);
+			BinaryTree right = new BinaryTree(current.childR.data, current.childR.childL, current.childR.childR);
+			return diff(left) + "+" + diff(right);
+		}
+                else if (current.data == '-'){
+                    BinaryTree left = new BinaryTree(current.childL.data, current.childL.childL,current.childL.childR);
+                    BinaryTree right = new BinaryTree(current.childR.data, current.childR.childL, current.childR.childR);
+                    return diff(left) + "-" + diff(right);
+                }
+                else if (current.data == '*'){
+                    BinaryTree left = new BinaryTree(current.childL.data, current.childL.childL, current.childL.childR);
+                    BinaryTree right = new BinaryTree(current.childR.data, current.childR.childL, current.childR.childR);
+                    left.inOrder(null);
+                    String leftString = left.infixString;
+                     
+                    
+
+                }
+
+		
+
+		return "";
+	}
+
+
     
-    public static class BinaryTree{
-        public static Node root;
-        public void addNode(char token)
-        {
-            Node newNode = new Node(token);
-            //creating a root with an empty value
-            if (root == null)
-            {
-                root = newNode;
-            }
-            else{
-                Node current = new Node(token);
-                current = root;
-                Node parent;
-            
-            //If statement to be followed if token is a '('
-            if (token == '('){
-               newNode = current.leftChild; 
-            }
-            //If statement to be followed if token is an operator
-            //**Code here is work in progress
-            if (token == '/'|| token== '*'|| token=='+'|| token == '-'){
-                current.token = token;
-            }
-            //If statement to be followed if token is ')"
-            if (token == ')'){
-                current = current.parent;
-            }
-            else{
-                //**Code here is work in progress.
-                //token will be last possibility: int 0-9
-                current.token = token;
-            }
-            root = new Node(token);
-            } 
-        }
-        public void inOrder(Node focusNode){
-            if(focusNode != null)
-            {
-                inOrder(focusNode.leftChild);
-                System.out.println(focusNode);
-                inOrder(focusNode.rightChild);
-            }
-            return;
-        }
-    }
+    static class Node {
+	Node parent;
+	char data;
+	Node childL;
+	Node childR;
+
+	public Node(Node p, char d, Node cL, Node cR){
+		parent = p;
+		data = d;
+		childL = cL;
+		childR = cR;
+	}
+
+	public boolean isLeaf(){
+		return (data >= '0' && data <= '9');
+	}
+    }    
+	
+    
+   static class BinaryTree {
+	
+	Node root = new Node(null, ' ', null, null);
+	Node focusNode;
+	String infixString = "";
+	String infixStringalt = "";
+	
+	public BinaryTree() {
+		root = null;
+	}
+
+	public BinaryTree(char rootItem, Node childL, Node childR) {
+		root = new Node(null, rootItem, childL, childR);
+	}
+	
+	// descends into left child of focusNode
+	// creates empty node if there isn't one initalized
+	public void descendLeft() {
+		if (focusNode.childL == null){
+			Node newNode = new Node(focusNode, ' ', null, null);
+			focusNode.childL = newNode;
+		}
+		focusNode = focusNode.childL;
+	}
+
+	// descends into right child of focusNode
+	// creates empty node if there isn't one initalized
+	public void descendRight() {
+		if (focusNode.childR == null){
+			Node newNode = new Node(focusNode, ' ', null, null);
+			focusNode.childR = newNode;
+		}
+		focusNode = focusNode.childR;
+	}
+	
+	// ascends to the parent of the focusNode
+	// if it has no parent (it is root), the tree
+	// structure is modified
+	public void ascendParent() {
+		if (focusNode.parent == null){
+			Node newNode = new Node(null, ' ', focusNode, null);
+			focusNode.parent = newNode;
+			root = focusNode.parent;
+		}
+		focusNode = focusNode.parent;
+	}
+
+	
+	// sets the current focusNode's data element
+	public void setFocus(char token) {
+		focusNode.data = token;
+	}
+
+	// checks if a specified node is a left child
+	public boolean isChildL(Node node){
+		if (node.parent != null)
+			return (node == node.parent.childL);
+		return false;
+	}
+
+	// checks if a specified node is a right child
+	public boolean isChildR(Node node){
+		if (node.parent != null)
+			return (node == node.parent.childR);
+		return false;
+	}
+
+	// prints the contents of the tree inorder, 
+	// correctly parenthesized
+	public void inOrder(Node node) {
+		Node current;
+		if (node == null)
+			node = root;
+		current = node;
+
+		if (current.childL != null)
+			inOrder(current.childL);
+
+		if (current.isLeaf() && isChildL(current) && current.parent.childR != null){
+				if (current.parent.childR.isLeaf())
+					infixString += "(";
+		}
+		infixString += current.data;
+
+		if (current.isLeaf() && isChildR(current) && current.parent.childL != null){
+				if (current.parent.childL.isLeaf())
+					infixString += ")";
+		}
+		if (current.childR != null)
+			inOrder(current.childR);
+	}
+
+}
 }

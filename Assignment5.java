@@ -1,7 +1,5 @@
 package assignment5;
-
- //@author Danny
- import java.util.Scanner;
+import java.util.Scanner;
 public class Assignment5 {
     /**
      * @param args the command line arguments
@@ -69,27 +67,31 @@ public class Assignment5 {
 		else if (current.isLeaf() && Character.toLowerCase(current.data) == 'x')
 			return "1";
 		
+                BinaryTree left = new BinaryTree(current.childL.data, current.childL.childL, current.childL.childR);
+                BinaryTree right = new BinaryTree(current.childR.data, current.childR.childL, current.childR.childR);
+                left.inOrder(null);
+                right.inOrder(null);
+                String RightS = right.infixString;
+                String LeftS = left.infixString;
+                
+                
 		// if '+', creates two trees from each of the children
 		// these trees are each differentiated and added together
-		else if (current.data == '+'){
-			BinaryTree left = new BinaryTree(current.childL.data, current.childL.childL, current.childL.childR);
-			BinaryTree right = new BinaryTree(current.childR.data, current.childR.childL, current.childR.childR);
-			return diff(left) + "+" + diff(right);
-		}
-                else if (current.data == '-'){
-                    BinaryTree left = new BinaryTree(current.childL.data, current.childL.childL,current.childL.childR);
-                    BinaryTree right = new BinaryTree(current.childR.data, current.childR.childL, current.childR.childR);
+		if (current.data == '+')
+                    return diff(left) + "+" + diff(right);
+		
+                //Case for if operator is '-'
+                else if (current.data == '-')
                     return diff(left) + "-" + diff(right);
-                }
-                else if (current.data == '*'){
-                    BinaryTree left = new BinaryTree(current.childL.data, current.childL.childL, current.childL.childR);
-                    BinaryTree right = new BinaryTree(current.childR.data, current.childR.childL, current.childR.childR);
-                    left.inOrder(null);
-                    String leftString = left.infixString;
-                     
-                    
-
-                }
+                //Case for if operator is '*'
+                else if (current.data == '*')
+                    return "((" + LeftS + " * " + diff(right) + ") + (" + RightS + "*" + diff(left)+ ")";
+                //Case for if operator is '/'
+                else if (current.data == '/')
+                    return "(((" + diff(left) + "*" + RightS + ")" + "-" +"(" + diff(right) + "*" + LeftS + ")) / (" + RightS + "^2))";
+                    //Case for if operator is '^'
+                else if (current.data == '^')
+                    return RightS + "* (" + LeftS + "^ (" + RightS + "-1)) + (" + diff(left) + ")";
 
 		
 
@@ -209,5 +211,5 @@ public class Assignment5 {
 			inOrder(current.childR);
 	}
 
-}
+    }
 }

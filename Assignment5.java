@@ -61,11 +61,15 @@ public class Assignment5 {
 			current = current.childL;
 
 		// base cases, if root = constant or = 'x'
-		if (current.isLeaf() && Character.toLowerCase(current.data) != 'x')
+                if (current.childL.data >='0' && current.childL.data <= '9' && current.data == 'x')
+                    return current.childL.data + " * 1"; 
+                
+                else if (Character.toLowerCase(current.data) != 'x')
 			return "0";
 
-		else if (current.isLeaf() && Character.toLowerCase(current.data) == 'x')
+		else if (Character.toLowerCase(current.data) == 'x')
 			return "1";
+                
 		
                 BinaryTree left = new BinaryTree(current.childL.data, current.childL.childL, current.childL.childR);
                 BinaryTree right = new BinaryTree(current.childR.data, current.childR.childL, current.childR.childR);
@@ -85,7 +89,7 @@ public class Assignment5 {
                     return diff(left) + "-" + diff(right);
                 //Case for if operator is '*'
                 else if (current.data == '*')
-                    return "((" + LeftS + " * " + diff(right) + ") + (" + RightS + "*" + diff(left)+ ")";
+                    return "((" + LeftS + "*" + diff(right) + ") + (" + RightS + "*" + diff(left)+ "))";
                 //Case for if operator is '/'
                 else if (current.data == '/')
                     return "(((" + diff(left) + "*" + RightS + ")" + "-" +"(" + diff(right) + "*" + LeftS + ")) / (" + RightS + "^2))";

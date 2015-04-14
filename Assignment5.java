@@ -64,10 +64,10 @@ public class Assignment5 {
                 if (current.childL.data >='0' && current.childL.data <= '9' && current.data == 'x')
                     return current.childL.data + " * 1"; 
                 
-                else if (Character.toLowerCase(current.data) != 'x')
+                else if (current.isLeaf() && Character.toLowerCase(current.data) != 'x')
 			return "0";
 
-		else if (Character.toLowerCase(current.data) == 'x')
+		else if (current.isLeaf() && Character.toLowerCase(current.data) == 'x')
 			return "1";
                 
 		

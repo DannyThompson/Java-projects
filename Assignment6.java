@@ -2,13 +2,14 @@ package assignment6;
 import java.util.Scanner;
 import static javafx.beans.binding.Bindings.length;
 public class Assignment6 {
-
+//Assignment 6
+    //Done by: Daniel Thompson and Jeff Bahns
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        priorityQueue P = new priorityQueue();
-        jobScheduler(P);
+        priorityQueue pqueue = new priorityQueue();
+        jobScheduler(pqueue);
  
     }
 public static void jobScheduler(priorityQueue pqueue){
@@ -27,23 +28,24 @@ public static void jobScheduler(priorityQueue pqueue){
             }
             if(currentJob.length == 0){
                 currentJob = null;
+               
             }
         }
-        
-    
-    System.out.print("| ");
+  
+    System.out.print("Add jobs with their length and priority. +"
+            + " Enter 'done' when finished: ");
     userInput = s.nextLine();
     String delim = "[ ]+";
     if(userInput.equals("done")){
         System.exit(0);
     }
-    if(!userInput.equals("done")){
-        String[] tokens = userInput.split(delim);
-        int priority = Integer.parseInt(tokens[8]);
-        String jobName = tokens[2];
-        int length = Integer.parseInt(tokens[5]);
-        pqueue.insert(priority, jobName, length);  
-    }
+        if(!userInput.equals("done")){
+            String[] tokens = userInput.split(delim);
+            int priority = Integer.parseInt(tokens[8]);
+            String jobName = tokens[2];
+            int length = Integer.parseInt(tokens[5]);
+            pqueue.insert(priority, jobName, length);  
+        }
     }
 }
 
@@ -126,3 +128,4 @@ public static class priorityQueue{
 
 }
 }
+

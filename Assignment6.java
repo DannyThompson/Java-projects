@@ -8,28 +8,52 @@ public class Assignment6 {
      */
     public static void main(String[] args) {
         priorityQueue P = new priorityQueue();
-        P.insertEnd("hi", 2, 3);
-        P.insertEnd("hii", 4, 5);
-        P.insertEnd("hiiy", 6, 7);
-        
-        System.out.println(P.removeMin());
-        
-        
-        
-        
-       
-        
-        
+        jobScheduler(P);
+ 
     }
+public static void jobScheduler(priorityQueue pqueue){
+    Scanner s = new Scanner(System.in);
+    node currentJob = null;
+    String userInput = " ";
     
+    while (!userInput.equals("done")){
+        if(currentJob == null){
+            currentJob = pqueue.removeMin();
+        }
+        if(currentJob != null){
+            for(int i = 0; i <= currentJob.length; i++){
+            System.out.println("RUNNING JOB:" + currentJob.job);
+            currentJob.length--;
+            }
+            if(currentJob.length == 0){
+                currentJob = null;
+            }
+        }
+        
+    
+    System.out.print("| ");
+    userInput = s.nextLine();
+    String delim = "[ ]+";
+    if(userInput.equals("done")){
+        System.exit(0);
+    }
+    if(!userInput.equals("done")){
+        String[] tokens = userInput.split(delim);
+        int priority = Integer.parseInt(tokens[8]);
+        String jobName = tokens[2];
+        int length = Integer.parseInt(tokens[5]);
+        pqueue.insert(priority, jobName, length);  
+    }
+    }
+}
 
 public static class node{
-    public node next, prev;
+    public node next;
     String job;
     int key;
     int length;
     
-    public node(String job, int key, int length)
+    public node(int key, String job, int length)
     {
         this.job = job;
         this.key = key;
@@ -38,70 +62,67 @@ public static class node{
     }
 }
 public static class priorityQueue{
-    public static node end;
-    public static node start;
+    public static node min;
     public String job;
     public int key;
-    public int length;
+    public int length = 0;
     
-    public int getKey(){
-        return key;
+    public priorityQueue(){
+        min = null;
     }
-    public int getLength(){
-        return length;
-    }
-    
+   public void increment(){
+       length++;
+   }
+   public void decrement(){
+       length--;
+   }
+   public boolean isEmpty(){
+       return(min==null);
+   }
        
-    public String getJob(){
-        return job;
+    public void printStr(){
+        String output = "";
+        node current = min;
+        while (current!= null){
+            output+=current.job;
+            current = current.next;
+        }
+        System.out.println(output);
     }
+
     
-    public void insertEnd(String job, int length,int priority){
-        node newNode = new node(job, length, priority);
-        if(priorityQueue.end == null){
-            priorityQueue.end = newNode;
+    public void insert(int key, String job,int length){
+        node newNode = new node(key, job, length);
+        if(isEmpty()){
+            min = newNode;
         }
         else{
-            priorityQueue.end.next = newNode;
-            newNode.prev = priorityQueue.end;
-            priorityQueue.end = newNode;
-            
-        }
-    }
-    public void recursive(){
-        
-    }
-    public String removeMin(){
-        int temp;
-        int temp2;
-        node current = priorityQueue.start;
-        node currenttemp = priorityQueue.start;
-        temp = current.key;
-        temp2 = current.next.key;
-        while(current.next != null)
-        {
-            temp2 = current.next.key;
-            if(temp < temp2)
-            {
-                temp = temp;
-                currenttemp = current; 
-                current = current.next.next;
-                temp2 = current.next.key;
+            node current = min;
+            if(current.key >= key){
+                newNode.next = current;
+                min = newNode;
             }
-                else
-                    {
-                      if(temp2 < temp){
-                          temp2 = temp2;
-                          currenttemp = current.next;
-                          current = current.next.next;
-                          temp = current.key;
-                        }
-                    }
+            else{
+                while(current.next != null && current.next.key <= key){
+                    current = current.next;
+                }
+                newNode.next = current.next;
+                current.next = newNode;
+            }
         }
-        return currenttemp.job;
-            
+        increment();
+    }
+    public node removeMin(){
+        if(isEmpty()){
+            return null;
         }
-        
-           
+        else{
+            node temp = min;
+            min = min.next;
+            decrement();
+            return temp;
         }
     }
+
+}
+}

@@ -1,13 +1,9 @@
 package fib;
 import java.util.Scanner;
-public class Fib {
-
-    /**
-     * @param args the command line arguments
-     */
+public class Fib 
+{
     public static void main(String[] args) 
     {
-        
         //User input is taken to get an Nth term up to which will be printed out
         Scanner scan = new Scanner(System.in);
         System.out.println("Enter the Nth term of the Fibonacci Sequence you wish"
@@ -28,7 +24,7 @@ public class Fib {
             System.out.print(fibcheck(i)+ " ");
             
         }
-       
+        
         //Somewhat redundant, prints what the Nth Term is.
         System.out.println("\nThe "+Nth+"th term is: "+array[Nth]);
         

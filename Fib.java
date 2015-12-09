@@ -24,7 +24,6 @@ public class Fib
             System.out.print(fibcheck(i)+ " ");
             
         }
-        
         //Somewhat redundant, prints what the Nth Term is.
         System.out.println("\nThe "+Nth+"th term is: "+array[Nth]);
         
@@ -53,7 +52,6 @@ public class Fib
             System.out.print(fibcheck(i)% Nth +" ");
         }
     }
-    
     // This prints each index of the Fibonacci Sequence.
     //The first two are always 1, so there's an if statement for 1 & 2 to print 1.
     public static int fibcheck(int i)
@@ -62,7 +60,6 @@ public class Fib
         {
             return 1;
         }
-        
         else
         {
             return fibcheck(i-1) + fibcheck(i-2);
